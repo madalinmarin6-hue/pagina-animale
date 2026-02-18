@@ -1,64 +1,144 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import Image from "next/image";
+import { useEffect, useMemo, useState } from "react";
+
+type Lang = "ro" | "en";
+
+export default function HomePage() {
+  const [lang, setLang] = useState<Lang>("ro");
+
+  useEffect(() => {
+    const saved = (localStorage.getItem("tb_lang") as Lang | null) ?? null;
+    const browser = navigator.language?.toLowerCase().startsWith("en") ? "en" : "ro";
+    setLang(saved ?? (browser as Lang));
+  }, []);
+
+  const t = useMemo(() => {
+    const ro = {
+      brand: "TOP-BREEDERS",
+      kicker: "",
+      headline: "Crește-ți reputația alături de cei mai buni",
+      body1:
+        "Ești un crescător dedicat sau oferi servicii de top în domeniul pet-care? Locul tău este aici. TOP-BREEDERS oferă vizibilitate celor care fac lucrurile ca la carte.",
+      body2:
+        "De la crescători care respectă standardele rasei, la experți în dresaj, grooming, pensiuni și clinici veterinare, fiecare partener de pe platforma noastră trece printr-un filtru riguros. Nu suntem doar o listă de contacte, ci o comunitate unde reputația se construiește prin transparență și feedback real.",
+      ctaLogin: "Autentificare",
+      ctaSignup: "Înregistrare",
+      note: "Publicare controlată • Reputație construită pe fapte • Acces rapid",
+      langRO: "RO",
+      langEN: "EN",
+    };
+
+    const en = {
+      brand: "TOP-BREEDERS",
+      kicker: "",
+      headline: "Build your reputation among the best",
+      body1:
+        "Are you a dedicated breeder or do you offer top-tier pet-care services? You belong here. TOP-BREEDERS gives visibility to professionals who do things the right way.",
+      body2:
+        "From breeders who respect breed standards to experts in training, grooming, boarding, and veterinary clinics, every partner on our platform goes through a rigorous screening process. We’re not just a list of contacts—we’re a community where reputation is built through transparency and real feedback.",
+      ctaLogin: "Log in",
+      ctaSignup: "Sign up",
+      note: "Moderated listings • Reputation built on facts • Quick access",
+      langRO: "RO",
+      langEN: "EN",
+    };
+
+    return lang === "ro" ? ro : en;
+  }, [lang]);
+
+  const setLanguage = (next: Lang) => {
+    setLang(next);
+    localStorage.setItem("tb_lang", next);
+  };
+
+  // /public/animals/1.jpg ... 18.jpg
+  const photos = Array.from({ length: 18 }, (_, i) => `/animals/${i + 1}.jpg`);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+    <div className="tb-root">
+      {/* background photos */}
+      <div className="tb-photos" aria-hidden="true">
+        {photos.map((src, idx) => (
+          <div key={src} className={`tb-photo tb-photo-${idx + 1}`}>
             <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+              src={src}
+              alt=""
+              fill
+              className="tb-photoImg"
+              sizes="240px"
+              priority={idx < 8}
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+          </div>
+        ))}
+        <div className="tb-vignette" />
+      </div>
+
+      {/* center card */}
+      <main className="tb-center">
+        <section className="tb-card" aria-label="TOP-BREEDERS main card">
+          {/* language */}
+          <div className="tb-lang" aria-label="Language">
+            <button
+              type="button"
+              className={`tb-langBtn ${lang === "ro" ? "isActive" : ""}`}
+              onClick={() => setLanguage("ro")}
+            >
+              {t.langRO}
+            </button>
+            <button
+              type="button"
+              className={`tb-langBtn ${lang === "en" ? "isActive" : ""}`}
+              onClick={() => setLanguage("en")}
+            >
+              {t.langEN}
+            </button>
+          </div>
+
+          {/* glows */}
+          <div className="tb-glow tb-glowA" aria-hidden="true" />
+          <div className="tb-glow tb-glowB" aria-hidden="true" />
+
+          {/* header */}
+          <div className="tb-header">
+            <div className="tb-logoCircle" aria-label="Logo">
+              <Image src="/logo.png" alt="TOP-BREEDERS logo" fill className="tb-logoImg" priority />
+            </div>
+
+            <div className="tb-brandWrap">
+              <div className="tb-brand">{t.brand}</div>
+              <div className="tb-kicker">{t.kicker}</div>
+            </div>
+          </div>
+
+          {/* content */}
+          <div className="tb-content">
+          <h1 className="tb-motto">{t.headline}</h1>
+
+
+            <div className="tb-text">
+  <p>
+    <span className="tb-accent"></span> {t.body1}
+  </p>
+  <p>{t.body2}</p>
+</div>
+
+
+            <div className="tb-actions" aria-label="Actions">
+            <a className="tb-btn tb-primary" href="/register?mode=login">
+  {t.ctaLogin}
+</a>
+
+<a className="tb-btn tb-secondary" href="/register?mode=signup">
+  {t.ctaSignup}
+</a>
+
+            </div>
+
+            <div className="tb-note">{t.note}</div>
+          </div>
+        </section>
       </main>
     </div>
   );

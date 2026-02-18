@@ -1,0 +1,10 @@
+/* src/app/page.module.css */
+:root {
+    --bg: #050914;
+  }
+  
+  .page {
+    min-height: 100vh;
+    background: var(--bg);
+  }
+  
