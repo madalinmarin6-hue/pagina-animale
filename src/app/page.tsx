@@ -125,16 +125,16 @@ export default function HomePage() {
 </div>
 
 
-            <div className="tb-actions" aria-label="Actions">
-            <a className="tb-btn tb-primary" href="/register?mode=login">
-  {t.ctaLogin}
-</a>
+<div className="tb-actions" aria-label="Actions">
+  <a className="tb-btn tb-primary" href="/login">
+    {t.ctaLogin}
+  </a>
 
-<a className="tb-btn tb-secondary" href="/register?mode=signup">
-  {t.ctaSignup}
-</a>
+  <a className="tb-btn tb-secondary" href="/register?mode=signup">
+    {t.ctaSignup}
+  </a>
+</div>
 
-            </div>
 
             <div className="tb-note">{t.note}</div>
           </div>
