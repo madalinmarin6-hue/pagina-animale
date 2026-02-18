@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* src/app/page.module.css */
 :root {
     --bg: #050914;
@@ -7,4 +8,15 @@
     min-height: 100vh;
     background: var(--bg);
   }
+=======
+/* src/app/page.module.css */
+:root {
+    --bg: #050914;
+  }
+  
+  .page {
+    min-height: 100vh;
+    background: var(--bg);
+  }
+>>>>>>> 4bbdefd (update homepage + images + logo)
   
